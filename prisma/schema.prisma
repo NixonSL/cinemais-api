@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum MediaType {
+  movie
+  series
+}
+
+model Media {
+  id          String     @id @default(uuid())
+  title       String
+  description String
+  type        MediaType
+  releaseYear Int
+  genre       String
+  createdAt   DateTime   @default(now())
+  favorites   Favorite[]
+}
+
+model Favorite {
+  userId  String
+  mediaId String
+  media   Media  @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@id([userId, mediaId])
+}
