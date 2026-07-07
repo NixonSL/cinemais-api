@@ -4,15 +4,16 @@ services:
     container_name: cinemais-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: cinemais
-      POSTGRES_PASSWORD: cinemais
-      POSTGRES_DB: cinemais
-    ports:
-      - '5432:5432'
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    # Comment out port mapping in production for security
+    # ports:
+    #   - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U cinemais -d cinemais']
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
       interval: 5s
       timeout: 5s
       retries: 5
@@ -24,9 +25,9 @@ services:
     ports:
       - '3000:3000'
     environment:
-      DATABASE_URL: postgresql://cinemais:cinemais@postgres:5432/cinemais?schema=public
-      PORT: 3000
-      HOST: 0.0.0.0
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+      PORT: ${PORT}
+      HOST: ${HOST}
       NODE_ENV: production
     depends_on:
       postgres:
