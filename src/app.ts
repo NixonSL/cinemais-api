@@ -84,10 +84,10 @@ export async function buildApp() {
     },
   });
 
-  app.get('/health', async () => ({ status: 'ok' }));
+  app.get('/api/v1/health', async () => ({ status: 'ok' }));
 
-  await app.register(mediaRoutes, { prefix: '/media' });
-  await app.register(favoritesRoutes, { prefix: '/users' });
+  await app.register(mediaRoutes, { prefix: '/api/v1/media' });
+  await app.register(favoritesRoutes, { prefix: '/api/v1/users' });
 
   return app;
 }
